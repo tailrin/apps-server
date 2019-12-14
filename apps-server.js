@@ -7,13 +7,44 @@ app.get('/apps', (req, res) => {
   const genres = req.query.genres;
   const acceptableGenres = ['Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card'];
 
-  console.log(req.query);
-
   if(Object.keys(req.query).length === 0 ){
     res.send(playstore);
   }
 
-  if(!!sort){
+  if(!!sort && !!genres){
+    const newArr = playstore.slice(0);
+    if(sort !== 'rating'  && sort !== 'app' &&sort !== ''){
+      res.status(400).send("Can only sort by rating or app")
+    }
+
+    if(!acceptableGenres.includes(genres)) {
+      res.status(400).send(`Be sure to choose one of the following ${acceptableGenres.join(', ')}.`);
+    }
+
+    const filtArr = newArr.filter(game =>  game.Genres.includes(genres))
+
+
+
+    if(sort === 'rating'){
+      filtArr.sort(function(a, b){
+        return b.Rating - a.Rating
+      });
+    }
+
+    if(sort === 'app'){
+      filtArr.sort((a,b) => {
+        if ( a.App < b.App ){
+          return -1;
+        }
+        if ( a.App > b.App ){
+          return 1;
+        }
+        return 0;
+      });
+    }
+
+    res.send(filtArr);
+  }else if(!!sort){
     if(sort !== 'rating'  && sort !== 'app'){
       res.status(400).send("Can only sort by rating or app")
     }else if(sort === ''){
@@ -35,18 +66,14 @@ app.get('/apps', (req, res) => {
       });
       res.send(newArr);
     }
-  }
-
-  if(!!genres) {
+  }else if(!!genres) {
     if(!acceptableGenres.includes(genres)) {
       res.status(400).send(`Be sure to choose one of the following ${acceptableGenres.join(', ')}.`);
     }else {
       res.send(playstore.filter(game =>  game.Genres.includes(genres)));
     }
   }
-
-
-  // res.send("this is a test")
+console.log('get has been called')
 });
 
 app.listen(8000, () => {
