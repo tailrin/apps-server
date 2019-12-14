@@ -2,21 +2,13 @@ const playstore = require('./playstore');
 const express = require('express');
 const app = express();
 
-
-function compare( a, b ) {
-  if ( a.App < b.App ){
-    return -1;
-  }
-  if ( a.App > b.App ){
-    return 1;
-  }
-  return 0;
-}
-
 app.get('/apps', (req, res) => {
   const sort = req.query.sort;
   const genres = req.query.genres;
+  const acceptableGenres = ['Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card'];
+
   console.log(req.query);
+
   if(Object.keys(req.query).length === 0 ){
     res.send(playstore);
   }
@@ -45,6 +37,13 @@ app.get('/apps', (req, res) => {
       }
   }
 
+    if(!!genres) {
+        if(!acceptableGenres.includes(genres)) {
+            res.status(400).send(`Be sure to choose one of the following ${acceptableGenres.join(', ')}.`);
+        }else {
+            res.send(playstore.filter(game =>  game.Genres.includes(genres)));
+        }
+    }
 
 
   // res.send("this is a test")
