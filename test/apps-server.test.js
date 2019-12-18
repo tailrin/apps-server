@@ -54,4 +54,24 @@ describe('Apps-server', () => {
                 expect(sorted).to.be.true;
             });
     });
+
+    it('should filter by genre', () => {
+        return request(app)
+            .get('/apps')
+            .query({genres: 'Puzzle'})
+            .expect(200)
+            .then(res => {
+                expect(res.body).to.be.an('array');
+                expect(res.body).to.have.lengthOf.at.least(1);
+                let i = 0;
+                let filtered = true;
+                while(filtered && i < res.body.length - 1) {
+                    filtered = res.body[i].Genres.includes('Puzzle');
+                    i++
+                }
+                expect(filtered).to.be.true;
+            })
+    });
+
+    
 });
