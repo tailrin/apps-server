@@ -2,10 +2,10 @@
   "name": "apps-server",
   "version": "1.0.0",
   "description": "",
-  "main": "apps-server.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app"
+    "test": "mocha",
+    "dev": "nodemon server"
   },
   "repository": {
     "type": "git",
@@ -19,9 +19,13 @@
   },
   "homepage": "https://github.com/tailrin/apps-server#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "morgan": "^1.9.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2",
+    "nodemon": "^2.0.2",
+    "supertest": "^4.0.2"
   }
 }
