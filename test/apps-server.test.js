@@ -34,4 +34,24 @@ describe('Apps-server', () => {
                 expect(sorted).to.be.true;
             });
     });
+
+    it('should return return the array sorted by rating', () => {
+        return request(app)
+            .get('/apps')
+            .query({sort: 'rating'})
+            .expect(200)
+            .then( res =>{
+                expect(res.body).to.be.an('array');
+                expect(res.body).to.have.lengthOf.at.least(1);
+                let i = 0;
+                let sorted = true;
+                while(sorted && i < res.body.length -1){
+                    let rating = res.body[i].Rating;
+                    let nextRating = res.body[i + 1].Rating;
+                    sorted = sorted && rating >= nextRating;
+                    i++
+                }
+                expect(sorted).to.be.true;
+            });
+    });
 });
