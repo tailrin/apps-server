@@ -73,5 +73,40 @@ describe('Apps-server', () => {
             })
     });
 
+    it('should filter by genre and sort by rating', () => {
+        return request(app)
+            .get('/apps')
+            .query({genres: 'Puzzle', sort: 'rating'})
+            .expect(200)
+            .then(res => {
+                expect(res.body).to.be.an('array');
+                expect(res.body).to.have.lengthOf.at.least(1);
+                let i = 0;
+                let filtered = true;
+                while(filtered && i < res.body.length - 1) {
+                    filtered = res.body[i].Genres.includes('Puzzle');
+                    i++
+                }
+                let j = 0;
+                let sorted = true;
+                while(sorted && j < res.body.length -1){
+                    let rating = res.body[j].Rating;
+                    let nextRating = res.body[j + 1].Rating;
+                    sorted = sorted && rating >= nextRating;
+                    j++
+                }
+                expect(filtered && sorted).to.be.true;
+
+            });
+    });
+
+    it('should send a 400 status code for invalid sort options', () => {
+        return request(app)
+        .get('/apps')
+        .query({sort: 'mistake'})
+        .expect(400, "Can only sort by rating or app")
+    });
+
+
     
 });
