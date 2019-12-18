@@ -107,6 +107,11 @@ describe('Apps-server', () => {
         .expect(400, "Can only sort by rating or app")
     });
 
+    it('should send a 400 status code for invalid genre', () => {
+        return request(app)
+        .get('/apps')
+        .query({genres: 'mistake'})
+        .expect(400, "Be sure to choose one of the following Action, Puzzle, Strategy, Casual, Arcade, Card.")
+    });
 
-    
 });
